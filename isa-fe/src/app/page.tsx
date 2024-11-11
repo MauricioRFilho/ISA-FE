@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import Header from './components/common/Header';
 import HomePage from './components/HomePage';
 import LoginPage from './components/LoginPage';
+import WelcomePage from './components/WelcomePage';
 
 interface User {
   id: string;
@@ -15,30 +16,40 @@ interface User {
 
 const Page: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
+  const [showWelcome, setShowWelcome] = useState(true); // Controle para a página de boas-vindas
 
   useEffect(() => {
-    // Verifica se há dados de usuário no localStorage
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
+      setShowWelcome(false);
     }
   }, []);
 
   const handleLoginSuccess = (userData: User) => {
-    // Salva o objeto de usuário no localStorage
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
   };
 
+  const proceedToLogin = () => {
+    setShowWelcome(false); // Avança para a página de login
+  };
+
+  const handleBackToWelcome = () => {
+    setShowWelcome(true); // Volta para a página de boas-vindas
+  };
+
   return (
-    <div>
-      {user ? (
+    <div style={{ height: '100vh' }}>
+      {showWelcome ? (
+        <WelcomePage onProceed={proceedToLogin} />
+      ) : user ? (
         <>
           <Header />
           <HomePage user={user} />
         </>
       ) : (
-        <LoginPage onLoginSuccess={handleLoginSuccess} />
+        <LoginPage onLoginSuccess={handleLoginSuccess} onBack={handleBackToWelcome} />
       )}
     </div>
   );
