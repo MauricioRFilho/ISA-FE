@@ -45,7 +45,6 @@ const Page: React.FC = () => {
         <WelcomePage onProceed={proceedToLogin} />
       ) : user ? (
         <>
-          <Header />
           <HomePage user={user} />
         </>
       ) : (

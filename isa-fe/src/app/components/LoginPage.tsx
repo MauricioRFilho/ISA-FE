@@ -17,6 +17,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) => {
   const [password, setPassword] = useState("hashed_password1");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [focusedInput, setFocusedInput] = useState<string | null>(null);
 
   const isFormValid = email.trim() !== "" && password.trim() !== "";
 
@@ -61,31 +62,65 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) => {
   };
 
   return (
-    <div style={{ backgroundColor: '#ffffff', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#002f8e' }}>
+    <div style={{ backgroundColor: '#ffffff', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000' }}>
       <div style={{ width: '90%', maxWidth: '400px', padding: '20px' }}>
-        <button style={{ background: 'none', border: 'none', color: '#002f8e', fontSize: '1rem', marginBottom: '20px' }} onClick={onBack}>
+        <button style={{ background: 'none', border: 'none', color: '#000', fontSize: '1rem', marginBottom: '20px', position: 'fixed', top: '10px', left: '5px'  }} onClick={onBack}>
           &larr; Voltar
         </button>
-        <h2 style={{ fontSize: '2rem', fontWeight: 'bold' }}>Login</h2>
+        <h2 style={{ fontSize: '2rem', fontWeight: 'bold' }}>Entre com a senha</h2>
         {/* Formulário de login */}
         <div style={{ margin: '20px 0' }}>
-          <label style={{ display: 'block', marginBottom: '8px', color: '#002f8e' }}>E-mail</label>
+          <label 
+            style={{
+              display: 'block', 
+              marginBottom: '8px', 
+              color: focusedInput === 'email' ? '#002f8e' : '#000',
+              fontWeight: focusedInput === 'email' ? '600' : '400'
+            }}
+          >
+            E-mail
+          </label>
           <input 
             type="email" 
             value={email} 
             onChange={(e) => setEmail(e.target.value)} 
             placeholder="Digite seu e-mail"
-            style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd' }}
+            onFocus={() => setFocusedInput('email')}
+            onBlur={() => setFocusedInput(null)}
+            style={{
+              width: '100%',
+              padding: '10px',
+              borderRadius: '5px',
+              border: `1px solid ${focusedInput === 'email' ? '#002f8e' : '#ddd'}`,
+              outline: 'none'
+            }}
           />
         </div>
         <div style={{ margin: '20px 0' }}>
-          <label style={{ display: 'block', marginBottom: '8px', color: '#002f8e' }}>Senha</label>
+          <label 
+            style={{
+              display: 'block', 
+              marginBottom: '8px', 
+              color: focusedInput === 'password' ? '#002f8e' : '#000',
+              fontWeight: focusedInput === 'password' ? '600' : '400'
+            }}
+          >
+            Senha
+          </label>
           <input 
             type="password" 
             value={password} 
             onChange={(e) => setPassword(e.target.value)} 
             placeholder="Digite sua senha"
-            style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd' }}
+            onFocus={() => setFocusedInput('password')}
+            onBlur={() => setFocusedInput(null)}
+            style={{
+              width: '100%',
+              padding: '10px',
+              borderRadius: '5px',
+              border: `1px solid ${focusedInput === 'password' ? '#002f8e' : '#ddd'}`,
+              outline: 'none'
+            }}
           />
         </div>
         <button 
