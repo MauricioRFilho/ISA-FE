@@ -1,34 +1,29 @@
-// page.tsx
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import Header from './components/common/Header';
-import HomePage from './components/HomePage';
-import LoginPage from './components/LoginPage';
-import WelcomePage from './components/WelcomePage';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  token: string;
-}
+import React, { useEffect } from "react";
+import { useAuth } from "./context/AuthContext"; // Importa o contexto de autenticação
+import Header from "./components/common/Header";
+import HomePage from "./components/HomePage";
+import LoginPage from "./components/LoginPage";
+import WelcomePage from "./components/WelcomePage";
 
 const Page: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [showWelcome, setShowWelcome] = useState(true); // Controle para a página de boas-vindas
+  const { user, setUser, token } = useAuth(); // Consumindo o contexto de autenticação
+  const [showWelcome, setShowWelcome] = React.useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    // Verifica o usuário armazenado e ajusta o estado inicial
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser); // Define o usuário no contexto
       setShowWelcome(false);
     }
-  }, []);
+  }, [setUser]);
 
   const handleLoginSuccess = (userData: User) => {
-    localStorage.setItem('user', JSON.stringify(userData));
-    setUser(userData);
+    localStorage.setItem("user", JSON.stringify(userData)); // Armazena o usuário localmente
+    setUser(userData); // Atualiza o contexto
   };
 
   const proceedToLogin = () => {
@@ -40,11 +35,12 @@ const Page: React.FC = () => {
   };
 
   return (
-    <div style={{ height: '100vh' }}>
+    <div style={{ height: "100vh" }}>
       {showWelcome ? (
         <WelcomePage onProceed={proceedToLogin} />
-      ) : user ? (
+      ) : user && token ? ( // Verifica se há usuário e token
         <>
+          <Header user={user} />
           <HomePage user={user} />
         </>
       ) : (
