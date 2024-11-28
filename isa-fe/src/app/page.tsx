@@ -1,46 +1,49 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { useAuth } from "./context/AuthContext"; // Importa o contexto de autenticação
+import React, { useEffect, useState } from "react";
+import { useAuth } from "./context/AuthContext";
+import { useRouter } from "next/navigation"; // Importando o useRouter
 import Header from "./components/common/Header";
-import HomePage from "./components/HomePage";
+import HomePage from "./pages/home/page";
 import LoginPage from "./components/LoginPage";
 import WelcomePage from "./components/WelcomePage";
+import { User } from "./types/types";
 
 const Page: React.FC = () => {
-  const { user, setUser, token } = useAuth(); // Consumindo o contexto de autenticação
-  const [showWelcome, setShowWelcome] = React.useState(true);
+  const { user, setUser, token } = useAuth();
+  const [showWelcome, setShowWelcome] = useState(true);
+  const [showHome, setShowHome] = useState(false)
 
   useEffect(() => {
-    // Verifica o usuário armazenado e ajusta o estado inicial
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser); // Define o usuário no contexto
-      setShowWelcome(false);
+      try {
+        const parsedUser: User = JSON.parse(storedUser);
+        setUser(parsedUser);
+        setShowWelcome(false);
+      } catch (error) {
+        console.error("Erro ao recuperar usuário do localStorage:", error);
+        localStorage.removeItem("user");
+      }
     }
   }, [setUser]);
 
   const handleLoginSuccess = (userData: User) => {
-    localStorage.setItem("user", JSON.stringify(userData)); // Armazena o usuário localmente
-    setUser(userData); // Atualiza o contexto
+    localStorage.setItem("user", JSON.stringify(userData));
+    setUser(userData);
+    setShowHome(true);
   };
 
-  const proceedToLogin = () => {
-    setShowWelcome(false); // Avança para a página de login
-  };
-
-  const handleBackToWelcome = () => {
-    setShowWelcome(true); // Volta para a página de boas-vindas
-  };
+  const proceedToLogin = () => setShowWelcome(false);
+  const handleBackToWelcome = () => setShowWelcome(true);
 
   return (
     <div style={{ height: "100vh" }}>
       {showWelcome ? (
         <WelcomePage onProceed={proceedToLogin} />
-      ) : user && token ? ( // Verifica se há usuário e token
+      ) : showHome && user ? (
         <>
-          <Header user={user} />
+          {/* <Header /> */}
           <HomePage user={user} />
         </>
       ) : (

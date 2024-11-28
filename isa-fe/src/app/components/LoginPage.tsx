@@ -1,3 +1,5 @@
+"use client"; // Diretiva para habilitar client-side rendering
+
 import React, { useState } from 'react';
 
 interface LoginPageProps {
@@ -44,7 +46,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) => {
       }
 
       const data = await response.json();
-      console.log("Login bem-sucedido:", data);
 
       const userData: User = {
         id: data.id,
@@ -64,26 +65,26 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) => {
   return (
     <div style={{ backgroundColor: '#ffffff', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000' }}>
       <div style={{ width: '90%', maxWidth: '400px', padding: '20px' }}>
-        <button style={{ background: 'none', border: 'none', color: '#000', fontSize: '1rem', marginBottom: '20px', position: 'fixed', top: '10px', left: '5px'  }} onClick={onBack}>
+        <button style={{ background: 'none', border: 'none', color: '#000', fontSize: '1rem', marginBottom: '20px', position: 'fixed', top: '10px', left: '5px' }} onClick={onBack}>
           &larr; Voltar
         </button>
         <h2 style={{ fontSize: '2rem', fontWeight: 'bold' }}>Entre com a senha</h2>
         {/* Formulário de login */}
         <div style={{ margin: '20px 0' }}>
-          <label 
+          <label
             style={{
-              display: 'block', 
-              marginBottom: '8px', 
+              display: 'block',
+              marginBottom: '8px',
               color: focusedInput === 'email' ? '#002f8e' : '#000',
               fontWeight: focusedInput === 'email' ? '600' : '400'
             }}
           >
             E-mail
           </label>
-          <input 
-            type="email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="Digite seu e-mail"
             onFocus={() => setFocusedInput('email')}
             onBlur={() => setFocusedInput(null)}
@@ -97,20 +98,20 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) => {
           />
         </div>
         <div style={{ margin: '20px 0' }}>
-          <label 
+          <label
             style={{
-              display: 'block', 
-              marginBottom: '8px', 
+              display: 'block',
+              marginBottom: '8px',
               color: focusedInput === 'password' ? '#002f8e' : '#000',
               fontWeight: focusedInput === 'password' ? '600' : '400'
             }}
           >
             Senha
           </label>
-          <input 
-            type="password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="Digite sua senha"
             onFocus={() => setFocusedInput('password')}
             onBlur={() => setFocusedInput(null)}
@@ -123,9 +124,9 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) => {
             }}
           />
         </div>
-        <button 
-          onClick={handleLogin} 
-          disabled={loading} 
+        <button
+          onClick={handleLogin}
+          disabled={loading}
           style={{ width: '100%', padding: '12px', backgroundColor: '#002f8e', color: '#fff', borderRadius: '5px', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer', border: 'none' }}
         >
           {loading ? "Carregando..." : "Entrar"}
